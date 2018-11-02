@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- TODO -->
+    <dimen name="main_margin_8dp">8dp</dimen>
+    <dimen name="width_email">160dp</dimen>
+    <dimen name="size_img">36dp</dimen>
+    <dimen name="layout_width_EditTextPhone">108dp</dimen>
+    <dimen name="main_img_width">192dp</dimen>
+    <dimen name="main_img_height">152dp</dimen>
 </resources>
