@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_OTRA = 1;
 
-    Avatar avatar = Database.getInstance().getDefaultAvatar();
+    MainActivityViewModel mViewModel;
     private ImageView profileImage;
     private TextView profileName;
     private EditText editTextName;
@@ -57,8 +57,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         initViews();
-        setProfileAvatar(avatar);
+        setProfileAvatar(mViewModel.getAvatar());
     }
 
     @Override
@@ -95,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         webImage = ActivityCompat.requireViewById(this, R.id.imgWeb);
         editTextName.requestFocus();
 
-        profileName.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,avatar,RC_OTRA));
-        profileImage.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,avatar,RC_OTRA));
+        profileName.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,mViewModel.getAvatar(),RC_OTRA));
+        profileImage.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,mViewModel.getAvatar(),RC_OTRA));
 
         emailImage.setOnClickListener(v -> startIntents(IntentsUtils.newMessage(editTextEmail.getText().toString()),true));
         phoneImage.setOnClickListener(v -> startIntents(IntentsUtils.newDialIntent(editTextPhone.getText().toString()),false));
@@ -200,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void obtainResponseData(Intent data) {
         if(data != null && data.hasExtra(AvatarActivity.EXTRA_AVATAR)){
-            avatar = data.getParcelableExtra(AvatarActivity.EXTRA_AVATAR);
+            mViewModel.setAvatar(data.getParcelableExtra(AvatarActivity.EXTRA_AVATAR));
         }
-        setProfileAvatar(avatar);
+        setProfileAvatar(mViewModel.getAvatar());
     }
 
     private void setProfileAvatar(Avatar avatar) {

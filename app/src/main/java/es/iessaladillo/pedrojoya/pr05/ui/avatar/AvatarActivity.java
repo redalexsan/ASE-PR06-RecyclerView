@@ -27,6 +27,7 @@ public class AvatarActivity extends AppCompatActivity {
     public static final String EXTRA_AVATAR = "EXTRA_AVATAR";
 
     private AvatarActivityViewModel avatarVM;
+    private Avatar avatar;
     private int positionImageSelected;
     private ImageView image1;
     private ImageView image2;
@@ -56,6 +57,7 @@ public class AvatarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.mnuSelect) {
+            avatar = avatarVM.getAvatar();
             finish();
             return true;
         }
@@ -72,6 +74,7 @@ public class AvatarActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_AVATAR)) {
             if(avatarVM.getAvatar() == null)
             avatarVM.setAvatar(intent.getParcelableExtra(EXTRA_AVATAR));
+            avatar = intent.getParcelableExtra(EXTRA_AVATAR);
         }
     }
 
@@ -142,7 +145,7 @@ public class AvatarActivity extends AppCompatActivity {
 
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_AVATAR, avatarVM.getAvatar());
+        intent.putExtra(EXTRA_AVATAR, avatar);
         this.setResult(RESULT_OK, intent);
         super.finish();
     }
