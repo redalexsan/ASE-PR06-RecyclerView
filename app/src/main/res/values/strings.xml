@@ -17,4 +17,8 @@
     <string name="main_phoneNumber">Phone number</string>
     <string name="main_adress">Address</string>
     <string name="main_web">Web</string>
+    <string name="main_not_students_yet">Not students yet</string>
+    <string name="main_lblEdit">Edit</string>
+    <string name="main_lblDelete">Delete</string>
+    <string name="profile_label">Edit profile</string>
 </resources>

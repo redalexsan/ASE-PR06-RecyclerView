@@ -1,29 +1,28 @@
-package es.iessaladillo.pedrojoya.pr05.ui.main;
+package es.iessaladillo.pedrojoya.pr05.ui.profile;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
+import java.util.Objects;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 import es.iessaladillo.pedrojoya.pr05.R;
-import es.iessaladillo.pedrojoya.pr05.data.local.Database;
 import es.iessaladillo.pedrojoya.pr05.data.local.model.Avatar;
+import es.iessaladillo.pedrojoya.pr05.data.local.model.User;
 import es.iessaladillo.pedrojoya.pr05.ui.avatar.AvatarActivity;
 import es.iessaladillo.pedrojoya.pr05.utils.IntentsUtils;
 import es.iessaladillo.pedrojoya.pr05.utils.KeyboardUtils;
@@ -31,11 +30,12 @@ import es.iessaladillo.pedrojoya.pr05.utils.NetworkUtils;
 import es.iessaladillo.pedrojoya.pr05.utils.ValidationUtils;
 
 @SuppressWarnings("WeakerAccess")
-public class MainActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private static final int RC_OTRA = 1;
+    public static final String EXTRA_EDITPROFILE = "EXTRA_EDITPROFILE";
 
-    MainActivityViewModel mViewModel;
+    ProfileViewModel mViewModel;
     private ImageView profileImage;
     private TextView profileName;
     private EditText editTextName;
@@ -52,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewPhone;
     private TextView textViewAdress;
     private TextView textViewWeb;
+    private User profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        setContentView(R.layout.activity_profile);
+        mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        obtainData(getIntent());
         initViews();
         setProfileAvatar(mViewModel.getAvatar());
     }
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //TODO: Guardar los datos editados o creados del usuario
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.mnuSave) {
@@ -95,9 +98,11 @@ public class MainActivity extends AppCompatActivity {
         adressImage = ActivityCompat.requireViewById(this, R.id.imgAddress);
         webImage = ActivityCompat.requireViewById(this, R.id.imgWeb);
         editTextName.requestFocus();
+       if(profile != null)
+           fillData();
 
-        profileName.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,mViewModel.getAvatar(),RC_OTRA));
-        profileImage.setOnClickListener(v -> AvatarActivity.startForResult(MainActivity.this,mViewModel.getAvatar(),RC_OTRA));
+        profileName.setOnClickListener(v -> AvatarActivity.startForResult(ProfileActivity.this,mViewModel.getAvatar(),RC_OTRA));
+        profileImage.setOnClickListener(v -> AvatarActivity.startForResult(ProfileActivity.this,mViewModel.getAvatar(),RC_OTRA));
 
         emailImage.setOnClickListener(v -> startIntents(IntentsUtils.newMessage(editTextEmail.getText().toString()),true));
         phoneImage.setOnClickListener(v -> startIntents(IntentsUtils.newDialIntent(editTextPhone.getText().toString()),false));
@@ -176,6 +181,18 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
+
+    private void fillData() {
+        mViewModel.setAvatar(profile.getAvatar());
+        profileName.setText(profile.getAvatar().getName());
+        profileImage.setImageResource(profile.getAvatar().getImageResId());
+        editTextName.setText(profile.getName());
+        editTextAdress.setText(profile.getAdress());
+        editTextEmail.setText(profile.getMail());
+        editTextPhone.setText(String.valueOf(profile.getPhoneNumer()));
+        editTextWeb.setText(profile.getWeb());
+    }
+
 
     private void setTypeFaceTxt(TextView text, boolean hasfocus){
         if(hasfocus)
@@ -263,8 +280,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void save() {
         KeyboardUtils.hideSoftKeyboard(this);
-        if(validar())
-            Snackbar.make(getCurrentFocus(),getString(R.string.main_saved_succesfully),Snackbar.LENGTH_SHORT).show();
+        if(validar()) {
+            changeData();
+            finish();
+        }
         else
             Snackbar.make(getCurrentFocus(),getString(R.string.main_error_saving),Snackbar.LENGTH_SHORT).show();
     }
@@ -283,4 +302,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void startForResult(Activity activity, User profile, int requestCode) {
+        Intent intent = new Intent(activity, ProfileActivity.class);
+        intent.putExtra(EXTRA_EDITPROFILE, profile);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    private void obtainData(Intent intent) {
+        if (intent != null && intent.hasExtra(EXTRA_EDITPROFILE)) {
+            profile = intent.getParcelableExtra(EXTRA_EDITPROFILE);
+        }
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_EDITPROFILE,profile);
+        this.setResult(RESULT_OK,intent);
+        super.finish();
+    }
+
+    private void changeData() {
+        profile.setName(editTextName.getText().toString());
+        profile.setAdress(editTextAdress.getText().toString());
+        profile.setPhoneNumer(Integer.parseInt(editTextPhone.getText().toString()));
+        profile.setWeb(editTextWeb.getText().toString());
+        profile.setMail(editTextEmail.getText().toString());
+        profile.setAvatar(mViewModel.getAvatar());
+    }
 }

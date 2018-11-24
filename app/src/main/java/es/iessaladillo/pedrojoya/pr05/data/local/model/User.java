@@ -1,13 +1,16 @@
 package es.iessaladillo.pedrojoya.pr05.data.local.model;
 
-public class Users {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private Avatar avatar;
     private String name, adress, mail, web;
     private int phoneNumer;
     private int id;
     private static int idCounter=0;
 
-    public Users(Avatar avatar, String name, String adress, String mail, String web, int phoneNumer) {
+    public User(Avatar avatar, String name, String adress, String mail, String web, int phoneNumer) {
         this.avatar = avatar;
         this.name = name;
         this.adress = adress;
@@ -17,6 +20,28 @@ public class Users {
         id = idCounter;
         idCounter++;
     }
+
+    protected User(Parcel in) {
+        avatar = in.readParcelable(Avatar.class.getClassLoader());
+        name = in.readString();
+        adress = in.readString();
+        mail = in.readString();
+        web = in.readString();
+        phoneNumer = in.readInt();
+        id = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -68,5 +93,21 @@ public class Users {
 
     public void setPhoneNumer(int phoneNumer) {
         this.phoneNumer = phoneNumer;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(avatar, flags);
+        dest.writeString(name);
+        dest.writeString(adress);
+        dest.writeString(mail);
+        dest.writeString(web);
+        dest.writeInt(phoneNumer);
+        dest.writeInt(id);
     }
 }

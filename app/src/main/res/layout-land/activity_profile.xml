@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="@+id/imgAvatar" />
 
     <include
-        layout="@layout/activity_main_profile"
+        layout="@layout/activity_profile_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

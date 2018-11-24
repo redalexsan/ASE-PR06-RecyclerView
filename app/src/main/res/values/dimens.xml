@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_margin_8dp">8dp</dimen>
-    <dimen name="width_email">160dp</dimen>
     <dimen name="size_img">36dp</dimen>
     <dimen name="layout_width_EditTextPhone">108dp</dimen>
-    <dimen name="main_img_width">192dp</dimen>
-    <dimen name="main_img_height">152dp</dimen>
+    <dimen name="main_size_16dp">16dp</dimen>
+    <dimen name="size_img_profile">55dp</dimen>
+    <dimen name="margin_lbl_20dp">20dp</dimen>
 </resources>

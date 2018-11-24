@@ -1,15 +1,15 @@
-package es.iessaladillo.pedrojoya.pr05.ui.main;
+package es.iessaladillo.pedrojoya.pr05.ui.profile;
 
 import androidx.lifecycle.ViewModel;
 import es.iessaladillo.pedrojoya.pr05.data.local.Database;
 import es.iessaladillo.pedrojoya.pr05.data.local.model.Avatar;
 
-public class MainActivityViewModel extends ViewModel {
+public class ProfileViewModel extends ViewModel {
 
     private Avatar avatar;
     private final Database database = Database.getInstance();
 
-    public MainActivityViewModel(){
+    public ProfileViewModel(){
         avatar = database.getDefaultAvatar();
     }
 

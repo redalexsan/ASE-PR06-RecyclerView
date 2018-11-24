@@ -25,6 +25,7 @@ public class Database {
         insertAvatar(new Avatar(R.drawable.cat4, "Kitty"));
         insertAvatar(new Avatar(R.drawable.cat5, "Felix"));
         insertAvatar(new Avatar(R.drawable.cat6, "Nina"));
+
     }
 
     public static Database getInstance() {
