@@ -5,5 +5,5 @@
     <dimen name="layout_width_EditTextPhone">108dp</dimen>
     <dimen name="main_size_16dp">16dp</dimen>
     <dimen name="size_img_profile">55dp</dimen>
-    <dimen name="margin_lbl_20dp">20dp</dimen>
+    <dimen name="margin_lbl_45dp">45dp</dimen>
 </resources>

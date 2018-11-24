@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DiffUtil;
@@ -29,7 +31,8 @@ public class MainActivityAdapter extends ListAdapter<User,MainActivityAdapter.Vi
 
             @Override
             public boolean areContentsTheSame(@NonNull User oldItem, @NonNull User newItem) {
-                return TextUtils.equals(oldItem.getName(),newItem.getName()) && TextUtils.equals(oldItem.getMail(),newItem.getMail()) && oldItem.getPhoneNumer() == newItem.getPhoneNumer();
+                return TextUtils.equals(oldItem.getName(),newItem.getName()) && TextUtils.equals(oldItem.getMail(),newItem.getMail()) && oldItem.getPhoneNumer() == newItem.getPhoneNumer() &&
+                        Objects.equals(oldItem.getAvatar(),newItem.getAvatar());
             }
         });
 

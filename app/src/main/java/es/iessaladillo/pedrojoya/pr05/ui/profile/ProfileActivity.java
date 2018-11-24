@@ -33,7 +33,8 @@ import es.iessaladillo.pedrojoya.pr05.utils.ValidationUtils;
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int RC_OTRA = 1;
-    public static final String EXTRA_EDITPROFILE = "EXTRA_EDITPROFILE";
+    public static final String EXTRA_EDITPROFILE = "EXTRA_EDITPROFILE", EXTRA_NEWPROFILE = "EXTRA_NEWPROFILE";
+    public static final int NEW_PROFILE = -1;
 
     ProfileViewModel mViewModel;
     private ImageView profileImage;
@@ -53,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView textViewAdress;
     private TextView textViewWeb;
     private User profile;
+    private boolean isNewProfile = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,6 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //TODO: Guardar los datos editados o creados del usuario
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.mnuSave) {
@@ -98,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
         adressImage = ActivityCompat.requireViewById(this, R.id.imgAddress);
         webImage = ActivityCompat.requireViewById(this, R.id.imgWeb);
         editTextName.requestFocus();
-       if(profile != null)
+       if(!isNewProfile)
            fillData();
 
         profileName.setOnClickListener(v -> AvatarActivity.startForResult(ProfileActivity.this,mViewModel.getAvatar(),RC_OTRA));
@@ -304,20 +305,29 @@ public class ProfileActivity extends AppCompatActivity {
 
     public static void startForResult(Activity activity, User profile, int requestCode) {
         Intent intent = new Intent(activity, ProfileActivity.class);
-        intent.putExtra(EXTRA_EDITPROFILE, profile);
+        if(profile != null)
+            intent.putExtra(EXTRA_EDITPROFILE, profile);
+        else
+            intent.putExtra(EXTRA_NEWPROFILE,profile);
         activity.startActivityForResult(intent, requestCode);
     }
 
     private void obtainData(Intent intent) {
-        if (intent != null && intent.hasExtra(EXTRA_EDITPROFILE)) {
+        if (intent != null && intent.hasExtra(EXTRA_EDITPROFILE))
             profile = intent.getParcelableExtra(EXTRA_EDITPROFILE);
+        else if(intent != null && intent.hasExtra(EXTRA_NEWPROFILE)) {
+            profile = new User(mViewModel.getAvatar(), "", "", "", "", NEW_PROFILE);
+            isNewProfile = true;
         }
     }
 
     @Override
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_EDITPROFILE,profile);
+        if(!isNewProfile)
+            intent.putExtra(EXTRA_EDITPROFILE,profile);
+        else
+            intent.putExtra(EXTRA_NEWPROFILE,profile);
         this.setResult(RESULT_OK,intent);
         super.finish();
     }

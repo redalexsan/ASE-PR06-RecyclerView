@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         b.lstProfiles.setLayoutManager(new GridLayoutManager(this,getResources().getInteger(R.integer.main_lstProfiles_columns)));
         b.lstProfiles.setItemAnimator(new DefaultItemAnimator());
         b.lstProfiles.setAdapter(listAdapter);
+
+        b.btnFloat.setOnClickListener(v -> ProfileActivity.startForResult(MainActivity.this,null,RC_PROFILE));
     }
 
     private void deleteProfile(User profile){
@@ -71,8 +73,16 @@ public class MainActivity extends AppCompatActivity {
     private void obtainResponseData(Intent data) {
         if(data != null && data.hasExtra(ProfileActivity.EXTRA_EDITPROFILE))
             changeProfile(data.getParcelableExtra(ProfileActivity.EXTRA_EDITPROFILE));
+        else if(data != null && data.hasExtra(ProfileActivity.EXTRA_NEWPROFILE))
+            newProfile(data.getParcelableExtra(ProfileActivity.EXTRA_NEWPROFILE));
 
         }
+
+    private void newProfile(Parcelable parcelableExtra) {
+        User newProfile = (User) parcelableExtra;
+        if(newProfile.getPhoneNumer() != ProfileActivity.NEW_PROFILE)
+            viewModel.addNewProfile(newProfile);
+    }
 
     private void changeProfile(Parcelable parcelableExtra) {
         User editProfile = (User) parcelableExtra;
